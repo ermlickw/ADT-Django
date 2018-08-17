@@ -1,0 +1,40 @@
+{% extends "ADT/base.html" %}
+{% load staticfiles %}
+
+{% block styles %}
+    {# Custom CSS#}
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}?v=00001">
+    <link rel="stylesheet" href="{% static 'css/game.css' %}?v=00001">
+    <!--  to clear the cache added '?v=00001' -->
+{% endblock %}
+
+{% block content %}
+
+
+<h1>Upload </h1>
+
+<form method="post" enctype="multipart/form-data">
+   {% csrf_token %}
+   <!-- <input type="text" name="Application Number:">
+   <input type="file" name="myfile"> -->
+   {{form.description}}
+   {{form.document}}
+   <button type="submit">Upload</button>
+
+ </form>
+
+    {{ClaimsView.create_nothing}}
+ <!-- <p><a href="{% url 'home' %}" >View Claim Tree and Listings</a></p> -->
+
+
+
+
+
+
+{% endblock %}
+
+
+{% block scipts %}
+{# JS SCRIPTS#}
+<!-- <script type="text/javascript" src="{% static 'js/game.js' %}"></script> -->
+{% endblock %}
