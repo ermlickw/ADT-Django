@@ -36,21 +36,16 @@
 
       <ul class="nav navbar-nav">
 
-        <li><a class='navbar-brand bigbrand' href="{% url 'home' %}">Preview</a></li>
-        <li><a href="{% url 'claims'%}">Claims Upload</a></li>
-        <li><a href="{% url 'one'%}">§101</a></li>
-        <li><a href="{% url 'twelve'%}">§112</a></li>
-        <li><a href="{% url 'art'%}">§102/103</a></li>
+        <li><a href="{% url 'home' %}">Select Case</a></li>
+        <li><a href="{% url 'claims'%}">Editable Claim Listing</a></li>
+        <li><a href="{% url 'one'%}">§101 issues</a></li>
+        <li><a href="{% url 'twelve'%}">§112 issues</a></li>
+        <li><a href="{% url 'art'%}">§102/103 (art) issues</a></li>
+        <li><a href="{% url 'art'%}">Write Action</a></li>
+        <li><a class='nav navbar-left' href="{% url 'home' %}" ><span class="glyphicon glyphicon-user"></span></a></li>
 
 
-      </ul>
 
-      <ul class="nav navbar-nav navbar-right">
-
-          <li><a class='nav navbar-right' href="{% url 'home' %}" ><span class="glyphicon glyphicon-user"></span></a></li>
-
-
-      </ul>
   </div>
 </nav>
 {% block content %}

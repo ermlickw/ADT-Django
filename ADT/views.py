@@ -4,6 +4,8 @@ from django.http import HttpResponse
 # from ADT.models import Art
 # from django.utils import timezone
 # # from ADT.formFile ArtForm
+import string
+import re
 from django.conf import settings
 import os
 from ADT.forms import FileForm
@@ -23,16 +25,46 @@ class HomeView(ListView):
     def get_queryset(self):
         return Claim.objects.all()
 
+class SpecificHomeView(ListView):
+    template_name = 'apphome.html'
+    Model = Claim
+    context_object_name = "CLAIMS"
+    def get_queryset(self):
+        return Claim.objects.filter(appNumber= self.kwargs['pk'])
+
 class ClaimsView(CreateView):
     template_name = 'claims.html'
     form_class = FileForm
-    Model = File,Nothing
+    Model = File
 
     def form_valid(self,form):
-        description = form.cleaned_data['description']  #magic
-        super().form_valid(form)
-        form.create_claims(self,description)
-        return  super().form_valid(form)#continue as normal after you do the functions inside
+        File.objects.all().delete()
+        appNumber = re.sub(" ","",str(form.cleaned_data['appNumber']).translate(string.punctuation)  )     #magic
+        if 'upload' in form.data:
+            super().form_valid(form)
+            if form.cleaned_data['document']:
+                form.create_claims(self,appNumber)
+        return super().form_valid(form)#continue as normal after you do the functions inside
+
+# def get_appno(request):
+#     # if this is a POST request we need to process the form data
+#     if request.method == 'POST':
+#         # create a form instance and populate it with data from the request:
+#         form = NameForm(request.POST)
+#         # check whether it's valid:
+#         if form.is_valid():
+#             appNumber = form.cleaned_data['appno']
+#             # process the data in form.cleaned_data as required
+#             # ...
+#             # redirect to a new URL:
+#             return HttpResponseRedirect(reverse("apphome",kwargs={'pk':self.appNumber}))
+#
+#     # if a GET (or any other method) we'll create a blank form
+#     else:
+#         form = NameForm()
+#
+#     return render(request, 'claims.html', {'form': form})
+
 
     # def post(request,instance):
     #     data = instance.POST.copy()
@@ -50,15 +82,3 @@ class TwelveView(TemplateView):
 
 class ArtView(TemplateView):
     template_name = 'art.html'
-
-# def model_form_upload(request):
-#     if request.method == 'POST':
-#         form = FileForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('home')
-#     else:
-#         form = DocumentForm()
-#     return render(request, 'core/model_form_upload.html', {
-#         'form': form
-#     })

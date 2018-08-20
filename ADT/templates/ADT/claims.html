@@ -11,19 +11,29 @@
 {% block content %}
 
 
-<h1>Upload </h1>
+<h1>Upload or Search App No.</h1>
 
 <form method="post" enctype="multipart/form-data">
    {% csrf_token %}
-   <!-- <input type="text" name="Application Number:">
-   <input type="file" name="myfile"> -->
-   {{form.description}}
+   <br>
+   {{form.appNumber}}
+   <br>
    {{form.document}}
-   <button type="submit">Upload</button>
+   <br>
+   <button type="submit" name="upload">Upload/Search</button>
 
  </form>
 
-    {{ClaimsView.create_nothing}}
+
+
+
+
+<!-- <form action="" method="post">
+  {% csrf_token %}
+   <label for="appNumber">Your name: </label>
+   <input id="appNumber" type="text" name="appNumber" value="{{ appNumber }}">
+   <input type="submit" value="OK">
+</form> -->
  <!-- <p><a href="{% url 'home' %}" >View Claim Tree and Listings</a></p> -->
 
 

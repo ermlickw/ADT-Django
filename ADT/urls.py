@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^One/$',views.OneView.as_view(),name='one'),
     url(r'^twelve/$',views.TwelveView.as_view(),name='twelve'),
     url(r'^art/$',views.ArtView.as_view(),name='art'),
+    url(r'^(?P<pk>\d+)/$', views.SpecificHomeView.as_view(), name='apphome'),
 
 ]
 # if the DEBUG is on in settings, then append the urlpatterns as below

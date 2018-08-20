@@ -1,0 +1,29 @@
+{% extends "ADT/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+        <title>Claims Preview:</title>
+
+        {% for claim in CLAIMS %}
+           <li>{{ claim.text }}</li>
+        {% endfor %}
+
+
+
+
+  {% endblock %}
+
+
+
+
+
+
+        {% block scipts %}
+        {# JS SCRIPTS#}
+        <script type="text/javascript" src="{% static 'js/blog.js' %}"></script>
+        {% endblock %}
+
+
+</body>
+</html>
