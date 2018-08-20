@@ -8,6 +8,7 @@ from docx import Document
 import traceback
 import sys
 from .validators import validate_file_extension
+from django.contrib.auth.models import User
 # from django.core.files.storage import FileSystemStorage
 #
 # good place to start project is with models
@@ -19,13 +20,15 @@ class File(models.Model):
 
     appNumber = models.TextField(max_length=10)
     document = models.FileField(upload_to=only_filename, blank=True, validators=[validate_file_extension])
+    # created_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(null=True)
     # description = models.TextField(blank=True)
 
     def __str__(self):
         return self.appNumber
 
     def get_absolute_url(self): #after post go where? only happens when {{form}} is provided in template
-        return reverse("apphome",kwargs={'pk':self.appNumber})
+        return reverse("claims",kwargs={'pk':self.appNumber})
 
 
 
@@ -38,22 +41,17 @@ class Claim(models.Model):
     number = models.IntegerField(default=0,blank=True)
     text = models.TextField(max_length=2000,blank=True)
     citedText = models.TextField(max_length=2000,blank=True)
-    para = models.FileField(blank=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(null=True)
+    # created_by = models.ForeignKey(User, related_name='posts', on_delete=)
+    # updated_by = models.ForeignKey(User, null=True, related_name='+')
 
-    def write_claim(self):
-        self.para = document.add_paragraph(self.citedText)
-        self.para.add_run(self.references)
-
-    def add_stuff(self,textstuff):
-        self.para.add_run(textstuff)
-
-
-class Nothing(models.Model):
-    text = models.TextField(max_length=10, blank=True)
-
+    # def write_claim(self):
+    #     self.para = document.add_paragraph(self.citedText)
+    #     self.para.add_run(self.references)
+    #
+    # def add_stuff(self,textstuff):
+    #     self.para.add_run(textstuff)
 
     def __str__(self):
-        return self.text
-
-    def get_absolute_url(self): #after post go where? only happens when {{form}} is provided in template
-        return reverse("claims",)
+        return str(self.appNumber) + "-Claim-" + str(self.number)
