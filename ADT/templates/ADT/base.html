@@ -34,40 +34,21 @@
     <div class="container">
 
 
+
       <ul class="nav navbar-nav">
-
-        <li><a href="{% url 'select' %}">Select Case</a></li>
-        {% if file != None %}}
-        <li><a href="{% url 'claims' CLAIMS %}">Editable Claim Listing</a></li>
-        <li><a href="{% url 'one' pk=CLAIMS.appNumber %}">§101 issues</a></li>
-        <li><a href="{% url 'twelve' pk=CLAIMS.appNumber %}">§112 issues</a></li>
-        <li><a href="{% url 'art' pk=CLAIMS.appNumber %}">§102/103 (art) issues</a></li>
-        <li><a href="{% url 'art' pk=CLAIMS.appNumber %}">Write Action</a></li>
-
-        <li><a class='nav navbar-left' href="{% url 'select' %}" ><span class="glyphicon glyphicon-user"></span></a></li>
+        {% if pk != None %}
+                <li><a href="{% url 'select' %}">Select Case</a></li>
+                <li><a href="{% url 'claims' pk=pk %}">Editable Claim Listing</a></li>
+                <li><a href="{% url 'one' pk=pk %}">§101 issues</a></li>
+                <li><a href="{% url 'twelve' pk=pk %}">§112 issues</a></li>
+                <li><a href="{% url 'art' pk=pk %}">§102/103 (art) issues</a></li>
+                <li><a href="{% url 'art' pk=pk %}">Write Action</a></li>
         {% endif %}
-
+                <li><a class='nav navbar-left' href="{% url 'select' %}" ><span class="glyphicon glyphicon-user"></span></a></li>
 
   </div>
 </nav>
 {% block content %}
-
-
-  {# The actual blog posts#}
-        <div class="content container">
-            <img src="{% static "images/LSATPHOTO.jpg" %}" alt="Uh Oh, didn't show!" style="width:600px;height:600px;">
-        </div>
-  {{Document.parse_doc_to_claims}}
-    {{Nothing.create_nothing}}
-        <title>Claims Preview:</title>
-
-        {% for claim in CLAIMS %}
-           <li>{{ claim.text }}</li>
-        {% endfor %}
-
-
-        <li><a href="https://github.com/ermlickw">Github</a></li>
-        <li><a href="https://www.linkedin.com/in/billyermlick/">LinkedIn</a></li>
 
 
   {% endblock %}

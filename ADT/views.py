@@ -12,7 +12,8 @@ from ADT.forms import FileForm, ClaimForm
 from ADT.models import File, Claim
 from django.views.generic import (TemplateView,ListView,
                                   DetailView,CreateView,
-                                  UpdateView,DeleteView)
+                                  UpdateView,DeleteView,
+                                  View, FormView)
 
 # from django.urls import reverse_lazy
 # from django.contrib.auth.mixins import LoginRequiredMixin #class based requirement
@@ -27,12 +28,27 @@ from django.views.generic import (TemplateView,ListView,
 
 class ClaimsView(ListView):
     template_name = 'claimsview.html'
-    form_class = ClaimForm
     Model = Claim
-    context_object_name = "CLAIMS"
+    form_class = ClaimForm
+    # context_object_name = "CLAIMS"
+
+    # def get(self, request, *args, **kwargs):
+    #     context = locals()
+    #     context['pk'] = self.kwargs['pk']
+    #     context['CLAIMS']= Claim.objects.filter(appNumber = self.kwargs['pk'])
+    #     return render(request,'claimsview.html',context)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ClaimsView, self).get_context_data(**kwargs)
+        ctx['pk'] = self.kwargs['pk']
+        ctx['CLAIMS']= Claim.objects.filter(appNumber = self.kwargs['pk'])
+        return ctx
 
     def get_queryset(self):
         return Claim.objects.filter(appNumber = self.kwargs['pk'])
+    #
+    # get_context_data(self, **kwargs):
+    #     return self.kwargs['pk']
 
     # def form_valid(self,form):
     #     post = form.save(commit=False)
@@ -41,23 +57,33 @@ class ClaimsView(ListView):
     #     post.save()
     #     return redirect('topic_posts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
 
+
+
 class SelectAppView(CreateView):
     template_name = 'select.html'
     form_class = FileForm
-    Model = File
-    context_object_name = "file_list"
+    # initial = {'appNumber': '12341', 'document':None}
+    Model = Claim, File
 
-    def get_queryset(self):
-        return File.objects.all()[0]
+    # def get(self, request, *args, **kwargs):
+    #     context = locals()
+    #     context['pk'] = Claim.objects.all()[0].appNumber
+    #     context['CLAIMS']= Claim.objects.all()[0]
+    #     return render(request,'select.html',context)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(SelectAppView, self).get_context_data(**kwargs)
+        ctx['pk'] = File.objects.order_by('created_at')[0].appNumber
+        ctx['CLAIMS']= File.objects.order_by('created_at')[0].appNumber
+        return ctx
 
     def form_valid(self,form):
         # File.objects.all().delete()
         appNumber = re.sub(" ","",str(form.cleaned_data['appNumber']).translate(string.punctuation)  )     #magic
-        if 'upload' in form.data:
-            super().form_valid(form)
-            if form.cleaned_data['document']:
-                form.create_claims(self,appNumber)
-        return super().form_valid(form)#continue as normal after you do the functions inside
+        super().form_valid(form)
+        if form.cleaned_data['document']:
+            form.create_claims(self,appNumber)
+        return super().form_valid(form) #continue as normal after you do the functions inside
 
 
 
@@ -95,6 +121,11 @@ class OneView(ListView):
     context_object_name = "CLAIMS"
     def get_queryset(self):
         return Claim.objects.filter(appNumber= self.kwargs['pk'])
+    def get(self, request, *args, **kwargs):
+        context = locals()
+        context['pk'] = self.kwargs['pk']
+        context['CLAIMS']= Claim.objects.filter(appNumber = self.kwargs['pk'])
+        return render(request,'one.html',context)
 
 class TwelveView(ListView):
     template_name = 'twelve.html'
@@ -103,9 +134,21 @@ class TwelveView(ListView):
     def get_queryset(self):
         return Claim.objects.filter(appNumber= self.kwargs['pk'])
 
+    def get(self, request, *args, **kwargs):
+        context = locals()
+        context['pk'] = self.kwargs['pk']
+        context['CLAIMS']= Claim.objects.filter(appNumber = self.kwargs['pk'])
+        return render(request,'twelve.html',context)
+
 class ArtView(ListView):
     template_name = 'art.html'
     Model = Claim
     context_object_name = "CLAIMS"
     def get_queryset(self):
         return Claim.objects.filter(appNumber= self.kwargs['pk'])
+
+    def get(self, request, *args, **kwargs):
+        context = locals()
+        context['pk'] = self.kwargs['pk']
+        context['CLAIMS']= Claim.objects.filter(appNumber = self.kwargs['pk'])
+        return render(request,'art.html',context)

@@ -7,7 +7,7 @@ from django.conf import settings
 #
 #
 
-#         }
+
 class FileForm(forms.ModelForm):
     class Meta:
         model = File
@@ -28,14 +28,13 @@ class FileForm(forms.ModelForm):
         for para in doc.paragraphs:
             fullText.append(para.text)
         Claim.objects.create(text=fullText, appNumber = appNumber)
-
-        return print(self)
+        pass
 
 
 class ClaimForm(forms.ModelForm):
     class Meta:
         model = Claim
-        fields = ('appNumber', 'text', )
+        fields = ('appNumber', 'text','dependentOn', 'number' )
 
         widgets = {
 

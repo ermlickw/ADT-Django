@@ -20,7 +20,7 @@ class File(models.Model):
 
     appNumber = models.TextField(max_length=10)
     document = models.FileField(upload_to=only_filename, blank=True, validators=[validate_file_extension])
-    # created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     # updated_at = models.DateTimeField(null=True)
     # description = models.TextField(blank=True)
 
@@ -41,10 +41,10 @@ class Claim(models.Model):
     number = models.IntegerField(default=0,blank=True)
     text = models.TextField(max_length=2000,blank=True)
     citedText = models.TextField(max_length=2000,blank=True)
-    # created_at = models.DateTimeField(auto_now_add=True)
-    # updated_at = models.DateTimeField(null=True)
-    # created_by = models.ForeignKey(User, related_name='posts', on_delete=)
-    # updated_by = models.ForeignKey(User, null=True, related_name='+')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True)
+    # created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    # updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     # def write_claim(self):
     #     self.para = document.add_paragraph(self.citedText)
