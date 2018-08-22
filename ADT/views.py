@@ -8,7 +8,7 @@ import string
 import re
 from django.conf import settings
 import os
-from ADT.forms import FileForm, ClaimForm
+from ADT.forms import FileForm, ClaimForm, ClaimFormSet
 from ADT.models import File, Claim
 from django.views.generic import (TemplateView,ListView,
                                   DetailView,CreateView,
@@ -26,10 +26,13 @@ from django.views.generic import (TemplateView,ListView,
 #     def get_queryset(self):
 #         return Claim.objects.all()
 
-class ClaimsView(ListView):
+class ClaimsView(FormView):
     template_name = 'claimsview.html'
     Model = Claim
-    form_class = ClaimForm
+    form_class = ClaimFormSet
+    # initial = {'number': ctx['CLAIMS'].number, 'dependentOn':ctx['CLAIMS'].dependentOn,
+    #             'text':ctx['CLAIMS'].text,}
+
     # context_object_name = "CLAIMS"
 
     # def get(self, request, *args, **kwargs):
@@ -44,18 +47,40 @@ class ClaimsView(ListView):
         ctx['CLAIMS']= Claim.objects.filter(appNumber = self.kwargs['pk'])
         return ctx
 
-    def get_queryset(self):
-        return Claim.objects.filter(appNumber = self.kwargs['pk'])
+    def get_form_kwargs(self):
+        kwargs = super(ClaimsView, self).get_form_kwargs()
+        kwargs["queryset"] = Claim.objects.filter(appNumber = self.kwargs['pk'])
+        return kwargs
+
+  #   {% for claim in CLAIMS %}
+  #    <!-- <li>{{ claim.text }}</li> -->
+  #
+  #       {{form}}
+  #       <br>
+  #
+  #
+  # {% endfor %}
+  #
+  # <button type="submit" >Update</button>
+
+
+
+    # def get_queryset(self):
+    #     return Claim.objects.filter(appNumber = self.kwargs['pk'])
     #
     # get_context_data(self, **kwargs):
     #     return self.kwargs['pk']
 
-    # def form_valid(self,form):
-    #     post = form.save(commit=False)
-    #     post.updated_by = self.request.user
-    #     post.updated_at = timezone.now()
-    #     post.save()
-    #     return redirect('topic_posts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
+    def form_valid(self,form):
+        for sub_form in form:
+            # if sub_form.has_changed():
+            sub_form.save()
+        return redirect('claims', pk=self.kwargs['pk'])
+
+
+    # def get_success_url(self):
+    #     return redirect('claims', pk=self.kwargs['pk'])
+
 
 
 

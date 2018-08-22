@@ -21,7 +21,7 @@ class File(models.Model):
     appNumber = models.TextField(max_length=10)
     document = models.FileField(upload_to=only_filename, blank=True, validators=[validate_file_extension])
     created_at = models.DateTimeField(auto_now_add=True)
-    # updated_at = models.DateTimeField(null=True)
+    updated_at = models.DateTimeField(null=True)
     # description = models.TextField(blank=True)
 
     def __str__(self):
@@ -52,6 +52,9 @@ class Claim(models.Model):
     #
     # def add_stuff(self,textstuff):
     #     self.para.add_run(textstuff)
+
+    def get_absolute_url(self): #after post go where? only happens when {{form}} is provided in template
+        return reverse("claims",kwargs={'pk':self.appNumber})
 
     def __str__(self):
         return str(self.appNumber) + "-Claim-" + str(self.number)

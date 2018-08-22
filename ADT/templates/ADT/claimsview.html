@@ -1,29 +1,40 @@
 {% extends "ADT/base.html" %}
 {% load staticfiles %}
 
+
+{% block styles %}
+{# Custom CSS#}
+<link rel="stylesheet" href="{% static 'css/claimsview.css' %}?v=00001">
+{% endblock %}
+
+
 {% block content %}
-
+<div class="split left">
+  <div class="centered">
         <title>Claims Preview:</title>
+      <form method="post" enctype="multipart/form-data">
+         {% csrf_token %}
+      <div class="form-group">
 
-        {% for claim in CLAIMS %}
-           <li>{{ claim.text }}</li>
+      {{ form.management_form }}
+      {% for claim in form %}
+      {{claim}}
+      <br>
+      {% endfor %}
+      </div>
+      <button type="submit" name="upload">Update Claims</button>
+</form>
+</div>
+</div>
 
-              <!-- {{form.appNumber}}
-              <br>
-              {{form.text}}
-              <br> -->
+<div class="split right">
+  <div class="centered">
+    <h2>John Doe</h2>
+    <p>Some text here too.</p>
+  </div>
+</div>
 
-        {% endfor %}
-
-
-
-
-  {% endblock %}
-
-
-
-
-
+{% endblock %}
 
         {% block scipts %}
         {# JS SCRIPTS#}
