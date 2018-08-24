@@ -43,6 +43,8 @@ class Claim(models.Model):
     citedText = models.TextField(max_length=2000,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
+    #parents
+    #children
     # created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     # updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 

@@ -14,7 +14,10 @@ from django.views.generic import (TemplateView,ListView,
                                   DetailView,CreateView,
                                   UpdateView,DeleteView,
                                   View, FormView)
+from django import template
 
+# $for future tempalte custom filter function
+# register = template.Library()
 # from django.urls import reverse_lazy
 # from django.contrib.auth.mixins import LoginRequiredMixin #class based requirement
 
@@ -44,7 +47,7 @@ class ClaimsView(FormView):
     def get_context_data(self, **kwargs):
         ctx = super(ClaimsView, self).get_context_data(**kwargs)
         ctx['pk'] = self.kwargs['pk']
-        ctx['CLAIMS']= Claim.objects.filter(appNumber = self.kwargs['pk'])
+        ctx['CLAIMS']= Claim.objects.filter(appNumber = self.kwargs['pk']).order_by('number')
         return ctx
 
     def get_form_kwargs(self):
@@ -74,7 +77,10 @@ class ClaimsView(FormView):
     def form_valid(self,form):
         for sub_form in form:
             # if sub_form.has_changed():
-            sub_form.save()
+            obj = sub_form.save()
+            # obj.number =1
+            #update claim parents and children
+            obj.save()
         return redirect('claims', pk=self.kwargs['pk'])
 
 
@@ -173,7 +179,7 @@ class ArtView(ListView):
         return Claim.objects.filter(appNumber= self.kwargs['pk'])
 
     def get(self, request, *args, **kwargs):
-        context = locals()
+        # context = locals()
         context['pk'] = self.kwargs['pk']
         context['CLAIMS']= Claim.objects.filter(appNumber = self.kwargs['pk'])
         return render(request,'art.html',context)

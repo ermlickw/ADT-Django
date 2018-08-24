@@ -30,7 +30,8 @@ class FileForm(forms.ModelForm):
         for para in doc.paragraphs:
             fullText.append(para.text)
         Claim.objects.create(text=fullText, appNumber = appNumber)
-        Claim.objects.create(text='second paragraph', appNumber = appNumber)
+        Claim.objects.create(text='second paragraph', appNumber = appNumber)    #parents and children added here
+
         pass
 
 
@@ -53,6 +54,15 @@ class ClaimForm(forms.ModelForm):
                 super(ClaimForm, self).__init__(*args, **kwargs)
                 self.kwargs['queryset'] = None
 
+
+        def claim_parents(obj):
+            allclmforappno = Claim.objects.filter(appNumber = obj.appNumber).order_by('number')
+
+        def claim_children(obj):
+            allclmforappno = Claim.objects.filter(appNumber = obj.appNumber).order_by('number')
+
+
+
 BaseClaimFormSet = modelformset_factory(Claim,exclude=(), form=ClaimForm, extra=1)
 
 class ClaimFormSet(BaseClaimFormSet):
@@ -69,15 +79,6 @@ class ClaimFormSet(BaseClaimFormSet):
         # kwargs['pk'] = self.appNumber
         # kwargs["queryset"] = Claim.objects.filter(appNumber = self.kwargs['pk'])
         return super(ClaimFormSet, self)._construct_form(*args, **kwargs)
-
-
-
-
-
-
-
-
-
 
         #basic form to select application
 # class AppnoForm(forms.Form):
