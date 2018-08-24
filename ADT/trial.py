@@ -36,7 +36,7 @@ document.add_heading('Document Title', 0)
 clm1 = Claim(citedText="stuff.", )
 clm1.write_claim()
 clm1.add_stuff("extra stuff")
-print(clm1.para)
+print(clm1.para.text)
 
 p = document.add_paragraph('A plain paragraph having some ')
 p.add_run('bold').bold = True

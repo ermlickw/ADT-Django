@@ -9,6 +9,7 @@ import traceback
 import sys
 from .validators import validate_file_extension
 from django.contrib.auth.models import User
+
 # from django.core.files.storage import FileSystemStorage
 #
 # good place to start project is with models
@@ -39,12 +40,12 @@ class Claim(models.Model):
     references = models.TextField(max_length=15,blank=True)
     dependentOn = models.IntegerField(default = 0,blank=True)
     number = models.IntegerField(default=0,blank=True)
-    text = models.TextField(max_length=2000,blank=True)
+    text = models.TextField(max_length=5000,blank=True)
     citedText = models.TextField(max_length=2000,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
-    #parents
-    #children
+    parents = models.CharField(max_length=15,blank=True)
+    children = models.CharField(max_length=15,blank=True)
     # created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     # updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 

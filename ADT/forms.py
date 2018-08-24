@@ -6,8 +6,70 @@ import os
 from django.conf import settings
 from django.forms.formsets import formset_factory
 from django.forms.models import modelformset_factory
+import re
+import string
+import json
 #
-#
+
+
+def add_update_parents(appNumber):
+    for claim in Claim.objects.filter(appNumber = appNumber).order_by('number'):
+        claim.parents = str(claim.parents)
+        claim_parents_list = claim.parents.split()
+        print(claim.number)
+        if claim.dependentOn != 0:
+            parentclaim = Claim.objects.filter(appNumber = appNumber, number=int(claim.dependentOn))[0]
+            claim_parents_list.append(parentclaim.number)
+            while int(parentclaim.dependentOn) != 0:
+                    parentclaim = Claim.objects.filter(appNumber = appNumber, number=parentclaim.dependentOn)[0]
+                    claim_parents_list.append(parentclaim.number)
+            claim.parents = claim_parents_list
+            claim.save()
+        print(claim.parents)
+        pass
+
+def add_update_children(appNumber):
+    for claim in Claim.objects.filter(appNumber = appNumber).order_by('number'):
+        print (claim.number)
+        claim.children = str(claim.children)
+        claim_children_list = claim.children.split()
+        for subclaim in Claim.objects.filter(appNumber = appNumber).order_by('number'):
+            if subclaim.number != claim.number:  #for all claims other than the claim itself
+                if str(subclaim.parents).find(str(claim.number)) != -1:  #if the subclaim has the claim as a parents
+                    if not(subclaim.number in claim_children_list):
+                        claim_children_list.append(subclaim.number)
+        print (claim_children_list)
+        claim.children = claim_children_list
+        claim.save()
+
+        pass
+
+
+
+
+    # for claim in Claim.objects.filter(appNumber = appNumber, dependentOn = 0):
+    #     claim.children = str(claim.children)
+    #     claim_children_list = claim.children.split()
+    #
+    #     for child in Claim.objects.filter(appNumber = appNumber, dependentOn = claim.number):
+    #         child.children = str(child.children)
+    #         child_children_list = child.children.split()
+    #         claim_children_list.append(child.number)
+    #
+    #         for subchild in Claim.objects.filter(appNumber = appNumber, dependentOn = child.number):
+    #             subchild.children = str(subchild.children)
+    #             subchild_children_list = subchild.children.split()
+    #             claim_children_list.append(subchild.number)
+    #             subchild_children_list.append(subchild.number)
+    #
+    #
+    #     claimset.append(claim.number)
+    #
+    #
+    #     claim.save()
+    pass
+
+
 
 
 class FileForm(forms.ModelForm):
@@ -26,11 +88,20 @@ class FileForm(forms.ModelForm):
                                   #File.objects.get(pk=1).document filed file cannot be read...
         filepath = os.path.join(settings.MEDIA_ROOT,appNumber + ".docx")
         doc = Document(filepath)
-        fullText=[]
         for para in doc.paragraphs:
-            fullText.append(para.text)
-        Claim.objects.create(text=fullText, appNumber = appNumber)
-        Claim.objects.create(text='second paragraph', appNumber = appNumber)    #parents and children added here
+            numb = para.text.split('.')[0]
+            numb= int(re.sub(" ","",str(numb).translate(string.punctuation)))
+            list_of_words = para.text.split()
+            if 'claim' in list_of_words: #if it's a dependent claim
+                depend = int(list_of_words[list_of_words.index('claim') + 1])
+                txt = " ".join(list_of_words[list_of_words.index('claim')+2:])
+            else:
+                depend = 0
+                txt = ".".join(para.text.split('.')[1:]).lstrip().rstrip()
+            Claim.objects.create(number=numb, dependentOn=depend, text=txt,citedText=txt, appNumber = appNumber, parents = 0)
+        #add parents and dependnts
+        add_update_parents(appNumber)
+        add_update_children(appNumber)
 
         pass
 
@@ -55,11 +126,6 @@ class ClaimForm(forms.ModelForm):
                 self.kwargs['queryset'] = None
 
 
-        def claim_parents(obj):
-            allclmforappno = Claim.objects.filter(appNumber = obj.appNumber).order_by('number')
-
-        def claim_children(obj):
-            allclmforappno = Claim.objects.filter(appNumber = obj.appNumber).order_by('number')
 
 
 
@@ -79,6 +145,12 @@ class ClaimFormSet(BaseClaimFormSet):
         # kwargs['pk'] = self.appNumber
         # kwargs["queryset"] = Claim.objects.filter(appNumber = self.kwargs['pk'])
         return super(ClaimFormSet, self)._construct_form(*args, **kwargs)
+
+    def update_claims(nothin,appno):
+        print(nothin)
+        # add_update_parents(nothin)
+        # add_update_children(nothin)
+        pass
 
         #basic form to select application
 # class AppnoForm(forms.Form):

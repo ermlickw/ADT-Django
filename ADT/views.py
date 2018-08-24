@@ -81,6 +81,7 @@ class ClaimsView(FormView):
             # obj.number =1
             #update claim parents and children
             obj.save()
+            # update_claims()
         return redirect('claims', pk=self.kwargs['pk'])
 
 
