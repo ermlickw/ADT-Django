@@ -81,12 +81,12 @@ class ClaimsView(FormView):
             # obj.number =1
             #update claim parents and children
             obj.save()
-            # update_claims()
+        form.update_claims(self.kwargs['pk'])
         return redirect('claims', pk=self.kwargs['pk'])
 
 
-    # def get_success_url(self):
-    #     return redirect('claims', pk=self.kwargs['pk'])
+    def get_success_url(self):
+        return redirect('claims', pk=self.kwargs['pk'])
 
 
 

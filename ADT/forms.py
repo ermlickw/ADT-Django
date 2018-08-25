@@ -14,10 +14,11 @@ import json
 
 def add_update_parents(appNumber):
     for claim in Claim.objects.filter(appNumber = appNumber).order_by('number'):
-        claim.parents = str(claim.parents)
-        claim_parents_list = claim.parents.split()
         print(claim.number)
         if claim.dependentOn != 0:
+            claim.parents = ""
+            claim.parents = str(claim.parents)
+            claim_parents_list = claim.parents.split()
             parentclaim = Claim.objects.filter(appNumber = appNumber, number=int(claim.dependentOn))[0]
             claim_parents_list.append(parentclaim.number)
             while int(parentclaim.dependentOn) != 0:
@@ -31,6 +32,7 @@ def add_update_parents(appNumber):
 def add_update_children(appNumber):
     for claim in Claim.objects.filter(appNumber = appNumber).order_by('number'):
         print (claim.number)
+        claim.children = ""
         claim.children = str(claim.children)
         claim_children_list = claim.children.split()
         for subclaim in Claim.objects.filter(appNumber = appNumber).order_by('number'):
@@ -147,9 +149,9 @@ class ClaimFormSet(BaseClaimFormSet):
         return super(ClaimFormSet, self)._construct_form(*args, **kwargs)
 
     def update_claims(nothin,appno):
-        print(nothin)
-        # add_update_parents(nothin)
-        # add_update_children(nothin)
+        print(appno)
+        add_update_parents(appno)
+        add_update_children(appno)
         pass
 
         #basic form to select application

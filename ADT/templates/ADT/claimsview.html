@@ -33,9 +33,12 @@
     <p>Select desired claim.</p>
     {% for claim in CLAIMS %}
     {{claim.number}}
+    {% for subclaim in claim.children %}
+    {{subclaim}}
       <br>
 
     {% endfor %}
+        {% endfor %}
   </div>
 </div>
 
