@@ -97,13 +97,18 @@ class FileForm(forms.ModelForm):
             if 'claim' in list_of_words: #if it's a dependent claim
                 depend = int(list_of_words[list_of_words.index('claim') + 1])
                 txt = " ".join(list_of_words[list_of_words.index('claim')+2:])
+                Claim.objects.create(number=numb, dependentOn=depend, text=txt,citedText=txt, appNumber = appNumber, parents = 0,
+                                    parent=Claim.objects.filter(appNumber = appNumber, number=depend)[0])
             else:
                 depend = 0
                 txt = ".".join(para.text.split('.')[1:]).lstrip().rstrip()
-            Claim.objects.create(number=numb, dependentOn=depend, text=txt,citedText=txt, appNumber = appNumber, parents = 0)
+                Claim.objects.create(number=numb, dependentOn=depend, text=txt,citedText=txt, appNumber = appNumber, parents = 0,
+                                    parent=None)
+
         #add parents and dependnts
         add_update_parents(appNumber)
         add_update_children(appNumber)
+
 
         pass
 

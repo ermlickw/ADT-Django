@@ -1,5 +1,6 @@
 {% extends "ADT/base.html" %}
 {% load staticfiles %}
+{% load custom_tags %}
 
 
 {% block styles %}
@@ -32,13 +33,13 @@
     <h2>Claim Tree</h2>
     <p>Select desired claim.</p>
     {% for claim in CLAIMS %}
-    {{claim.number}}
-    {% for subclaim in claim.children %}
-    {{subclaim}}
+      {% if claim.dependentOn == 0 %}
+      <a href="{{ claim.get_absolute_url }}">{{claim.number}}</a>
       <br>
-
+        {% custom_function claim %}
+      {% endif %}
+      <br>
     {% endfor %}
-        {% endfor %}
   </div>
 </div>
 

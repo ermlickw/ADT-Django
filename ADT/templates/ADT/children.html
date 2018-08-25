@@ -1,0 +1,37 @@
+<ul>
+  {% for child in childs %}
+  <a href="{{ child.get_absolute_url }}">{{child.number}}</a>
+     <br>
+    {% endfor %}
+</ul>
+
+
+
+#while one of the subchildren still have subchildren
+#print child
+#child = subchildren
+#find child subchildren
+#print
+
+
+<!-- def get_all_children(self):
+        children = [self]
+        try:
+            child_list = self.children.all()
+        except AttributeError:
+            return children
+        for child in child_list:
+            children.extend(child.get_all_children())
+        return children
+
+    def get_all_parents(self):
+        parents = [self]
+        if self.parent is not None:
+            parent = self.parent
+            parents.extend(parent.get_all_parents())
+        return parents
+
+    def clean(self):
+        if self.parent in self.get_all_children():
+            raise ValidationError("A user cannot have itself \
+                    or one of its' children as parent.") -->

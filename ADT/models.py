@@ -46,6 +46,7 @@ class Claim(models.Model):
     updated_at = models.DateTimeField(null=True)
     parents = models.CharField(max_length=15,blank=True)
     children = models.CharField(max_length=15,blank=True)
+    parent = models.ForeignKey('self',null=True,blank=True, related_name='childs', on_delete=models.CASCADE)
     # created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     # updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 

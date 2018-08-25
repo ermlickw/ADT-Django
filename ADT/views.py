@@ -17,7 +17,7 @@ from django.views.generic import (TemplateView,ListView,
 from django import template
 
 # $for future tempalte custom filter function
-# register = template.Library()
+
 # from django.urls import reverse_lazy
 # from django.contrib.auth.mixins import LoginRequiredMixin #class based requirement
 
@@ -79,7 +79,10 @@ class ClaimsView(FormView):
             # if sub_form.has_changed():
             obj = sub_form.save()
             # obj.number =1
-            #update claim parents and children
+            if obj.dependentOn != 0:
+                obj.parent = Claim.objects.filter(appNumber = obj.appNumber, number=obj.dependentOn)[0]
+            else:
+                obj.parent = None
             obj.save()
         form.update_claims(self.kwargs['pk'])
         return redirect('claims', pk=self.kwargs['pk'])
@@ -111,7 +114,7 @@ class SelectAppView(CreateView):
 
     def form_valid(self,form):
         # File.objects.all().delete()
-        appNumber = re.sub(" ","",str(form.cleaned_data['appNumber']).translate(string.punctuation)  )     #magic
+        appNumber = re.sub(" ","",str(form.cleaned_data['appNumber']).translate(string.punctuation))     #magic
         super().form_valid(form)
         if form.cleaned_data['document']:
             form.create_claims(self,appNumber)
